@@ -215,14 +215,14 @@ export class Blueprint {
      */
     autoBuild() {
         const commands = [];
-        let blueprint = this.data
+        let blueprint = this.data;
 
         let minX = Infinity, maxX = -Infinity;
         let minY = Infinity, maxY = -Infinity;
         let minZ = Infinity, maxZ = -Infinity;
 
         for (const level of blueprint.levels) {
-            console.log(level.level)
+            console.log(level.level);
             const baseX = level.coordinates[0];
             const baseY = level.coordinates[1];
             const baseZ = level.coordinates[2];
@@ -264,9 +264,9 @@ export class Blueprint {
      *
      */
     autoDelete() {
-        console.log("auto delete called!")
+        console.log("auto delete called!");
         const commands = [];
-        let blueprint = this.data
+        let blueprint = this.data;
 
         let minX = Infinity, maxX = -Infinity;
         let minY = Infinity, maxY = -Infinity;
@@ -339,16 +339,14 @@ export function proceduralGeneration(m = 20,
                                      carpetStyle = 1,
                                      windowStyle = 1,
                                      complexity = 4,
-                                     startCoord = [148,-60,-170]) {
+                                     startCoord = [148,-60,-170],
+                                     roomMaterials = ["stone", "terracotta", "quartz_block", "copper_block", "purpur_block"]) {
     // Build 3D space
     const matrix = Array.from({length: p}, () =>
         Array.from({length: m}, () =>
             Array(n).fill('air')
         )
     );
-
-    // todo: extrapolate into another param? then have set materials be dynamic? 
-    let roomMaterials = ["stone", "terracotta", "quartz_block", "copper_block", "purpur_block"]
 
     if (complexity < roomMaterials.length) {
         roomMaterials = roomMaterials.slice(0, complexity + 1);
@@ -504,9 +502,9 @@ export function proceduralGeneration(m = 20,
         const matrixDepth = matrix.length;
         const matrixLength = matrix[0].length;
         const matrixWidth = matrix[0][0].length;
-        const windowX = Math.ceil(minRoomWidth / 2)
-        const windowY = Math.ceil(minRoomLength / 2)
-        const windowZ = Math.ceil(minRoomDepth / 2)
+        const windowX = Math.ceil(minRoomWidth / 2);
+        const windowY = Math.ceil(minRoomLength / 2);
+        const windowZ = Math.ceil(minRoomDepth / 2);
 
         // Helper function to check if coordinates are within bounds
         function isInBounds(z, x, y) {
@@ -735,10 +733,10 @@ export function proceduralGeneration(m = 20,
             case 0:
                 break;
             case 1:
-                addWindowsAsSquares(matrix, newZ, newY, newZ, newLength, newWidth, newDepth, material)
+                addWindowsAsSquares(matrix, newZ, newY, newZ, newLength, newWidth, newDepth, material);
                 break;
             case 2:
-                addWindowsAsPlane(matrix, newZ, newY, newZ, newLength, newWidth, newDepth, material)
+                addWindowsAsPlane(matrix, newZ, newY, newZ, newLength, newWidth, newDepth, material);
         }
 
 
@@ -749,7 +747,7 @@ export function proceduralGeneration(m = 20,
                 addCarpet(0.3, matrix, newX, newY, newZ, newLength, newWidth, material);
                 break;
             case 2:
-                addCarpet(0.7, matrix, newX, newY, newZ, newLength, newWidth, material)
+                addCarpet(0.7, matrix, newX, newY, newZ, newLength, newWidth, material);
                 break;
         }
 
@@ -795,7 +793,7 @@ export function proceduralGeneration(m = 20,
                     // Back side
                     addDoor(matrix, newX + Math.floor(newLength / 2), newY + newWidth - 1, newZ, material);
 
-                    addCarpet(0.7, matrix, newX, newY, newZ, newLength, newWidth)
+                    addCarpet(0.7, matrix, newX, newY, newZ, newLength, newWidth);
                 }
 
                 break;
@@ -809,13 +807,13 @@ export function proceduralGeneration(m = 20,
                         newZ = lastRoom.z + lastRoom.depth - 1;
                         if (validateAndBuildBorder(matrix, newX, newY, newZ, newLength, newWidth, newDepth, m, n, p, material)) {
 
-                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material)
+                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material);
 
                             // addLadder(matrix, lastRoom.x + Math.floor(lastRoom.length / 2),
                             //     lastRoom.y + Math.floor(lastRoom.width / 2),
                             //     newZ); // Adding the ladder
 
-                            addStairs(matrix, newX, newY, newZ, newLength, newWidth, material)
+                            addStairs(matrix, newX, newY, newZ, newLength, newWidth, material);
 
 
                             lastRoom = {x: newX, y: newY, z: newZ, length: newLength, width: newWidth, depth: newDepth};
@@ -832,7 +830,7 @@ export function proceduralGeneration(m = 20,
                         if (validateAndBuildBorder(matrix, newX, newY, newZ, newLength, newWidth, newDepth, m, n, p, material)) {
 
 
-                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material)
+                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material);
 
 
                             addDoor(matrix, lastRoom.x, lastRoom.y + Math.floor(lastRoom.width / 2), lastRoom.z, material);
@@ -851,7 +849,7 @@ export function proceduralGeneration(m = 20,
                         newZ = lastRoom.z;
                         if (validateAndBuildBorder(matrix, newX, newY, newZ, newLength, newWidth, newDepth, m, n, p, material)) {
 
-                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material)
+                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material);
 
 
                             addDoor(matrix, lastRoom.x + lastRoom.length - 1,
@@ -872,7 +870,7 @@ export function proceduralGeneration(m = 20,
                         newZ = lastRoom.z;
                         if (validateAndBuildBorder(matrix, newX, newY, newZ, newLength, newWidth, newDepth, m, n, p, material)) {
 
-                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material)
+                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material);
 
 
                             addDoor(matrix, lastRoom.x + Math.floor(lastRoom.length / 2),
@@ -893,7 +891,7 @@ export function proceduralGeneration(m = 20,
                         newZ = lastRoom.z;
                         if (validateAndBuildBorder(matrix, newX, newY, newZ, newLength, newWidth, newDepth, m, n, p, material)) {
 
-                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material)
+                            embellishments(carpetStyle, windowStyle, matrix, newX, newY, newZ, newLength, newWidth, newDepth, material);
 
 
                             addDoor(matrix, lastRoom.x + Math.floor(lastRoom.length / 2),
@@ -924,7 +922,7 @@ export function proceduralGeneration(m = 20,
     // uncomment to visualize blueprint output
     // printMatrix(matrix)
 
-    return matrixToBlueprint(matrix, startCoord)
+    return matrixToBlueprint(matrix, startCoord);
 }
 
 
@@ -949,7 +947,7 @@ function printMatrix(matrix) {
                         case 'oak_stairs[facing=east]': return 'S';  // Stairs
                         case 'oak_stairs[facing=south]': return 'S';  // Stairs
                         case 'oak_stairs[facing=west]': return 'S';  // Stairs
-                        case 'glass': return 'W'
+                        case 'glass': return 'W';
 
 
                         default: return '?';       // Unknown or unmarked space
@@ -970,7 +968,7 @@ function printMatrix(matrix) {
 function matrixToBlueprint(matrix, startCoord) {
     // Validate inputs
     if (!Array.isArray(matrix) || !Array.isArray(startCoord) || startCoord.length !== 3) {
-        console.log(matrix)
+        console.log(matrix);
         throw new Error('Invalid input format');
     }
 
@@ -1038,24 +1036,24 @@ export async function worldToBlueprint(startCoord, y_amount, x_amount, z_amount,
             level: y,
             coordinates: coordinates,
             placement: placement
-        })
+        });
     }
     console.log(levels);
     const blueprint_data = {
         materials: materials,
         levels: levels
-    }
-    return blueprint_data
+    };
+    return blueprint_data;
 }
 
 export function blueprintToTask(blueprint_data, num_agents) {
-    let initialInventory = {}
+    let initialInventory = {};
     for (let j = 0; j < num_agents; j++) {
         initialInventory[JSON.stringify(j)] = {"diamond_pickaxe": 1, "diamond_axe": 1, "diamond_shovel": 1};
     }
 
     let give_agent = 0;
-    console.log("materials", blueprint_data.materials)
+    console.log("materials", blueprint_data.materials);
     for (const key of Object.keys(blueprint_data.materials)) {
         initialInventory[JSON.stringify(give_agent)][key] = blueprint_data.materials[key];
         give_agent = (give_agent + 1) % num_agents;
