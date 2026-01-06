@@ -10,12 +10,25 @@ function App() {
   const [activeTabId, setActiveTabId] = useState('welcome');
   const [files, setFiles] = useState({}); // Simple file content store: { 'untitled-1': 'content...' }
 
-  const handleNewFile = () => {
+  const handleNewFile = async () => {
     const newFileId = `Untitled-${Object.keys(files).length + 1}`;
-    setFiles({ ...files, [newFileId]: '' });
+
+    // Optimistic UI update
     const newTab = { id: newFileId, title: newFileId, type: 'editor' };
     setTabs([...tabs, newTab]);
+    setFiles({ ...files, [newFileId]: '' });
     setActiveTabId(newFileId);
+
+    // Sync with backend
+    try {
+      await fetch('http://localhost:3000/api/files', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: newFileId, title: newFileId, content: '' })
+      });
+    } catch (err) {
+      console.error("Failed to create file on backend", err);
+    }
   };
 
   const handleCloseTab = (e, tabId) => {
@@ -29,8 +42,19 @@ function App() {
     }
   };
 
-  const updateFileContent = (fileId, content) => {
+  const updateFileContent = async (fileId, content) => {
     setFiles({ ...files, [fileId]: content });
+
+    // Debounced save could go here, for now direct save
+    try {
+        await fetch(`http://localhost:3000/api/files/${fileId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content })
+        });
+    } catch (err) {
+        console.error("Failed to save file", err);
+    }
   };
 
   const activeTab = tabs.find(t => t.id === activeTabId);
