@@ -1,0 +1,41 @@
+.editor-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.line-numbers {
+  min-width: 40px;
+  background-color: #1e1e1e;
+  text-align: right;
+  padding-right: 10px;
+  padding-top: 10px;
+  color: #858585;
+  user-select: none;
+  border-right: 1px solid #333;
+}
+
+.line-number {
+  line-height: 20px; /* Matches textarea line-height if set correctly */
+}
+
+.code-input {
+  flex: 1;
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  resize: none;
+  outline: none;
+  padding: 10px;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 20px;
+  white-space: pre;
+  overflow-y: auto;
+  tab-size: 4;
+}

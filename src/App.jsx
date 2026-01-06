@@ -1,10 +1,39 @@
 import React, { useState } from 'react';
 import WelcomePage from './WelcomePage';
+import Editor from './Editor';
 import './App.css';
 import { VscFiles, VscSearch, VscSourceControl, VscDebugAlt, VscExtensions, VscAccount, VscSettingsGear, VscMenu } from 'react-icons/vsc';
 
 function App() {
   const [activeActivity, setActiveActivity] = useState('files');
+  const [tabs, setTabs] = useState([{ id: 'welcome', title: 'Welcome', type: 'welcome' }]);
+  const [activeTabId, setActiveTabId] = useState('welcome');
+  const [files, setFiles] = useState({}); // Simple file content store: { 'untitled-1': 'content...' }
+
+  const handleNewFile = () => {
+    const newFileId = `Untitled-${Object.keys(files).length + 1}`;
+    setFiles({ ...files, [newFileId]: '' });
+    const newTab = { id: newFileId, title: newFileId, type: 'editor' };
+    setTabs([...tabs, newTab]);
+    setActiveTabId(newFileId);
+  };
+
+  const handleCloseTab = (e, tabId) => {
+    e.stopPropagation();
+    const newTabs = tabs.filter(t => t.id !== tabId);
+    setTabs(newTabs);
+    if (activeTabId === tabId && newTabs.length > 0) {
+      setActiveTabId(newTabs[newTabs.length - 1].id);
+    } else if (newTabs.length === 0) {
+      setActiveTabId(null);
+    }
+  };
+
+  const updateFileContent = (fileId, content) => {
+    setFiles({ ...files, [fileId]: content });
+  };
+
+  const activeTab = tabs.find(t => t.id === activeTabId);
 
   return (
     <div className="app-container">
@@ -59,14 +88,29 @@ function App() {
         {/* Editor Area */}
         <div className="editor-area">
           <div className="tab-bar">
-            <div className="tab active">
-              <img src="/vite.svg" width="14" style={{marginRight: 6}} />
-              <span>Welcome</span>
-              <span className="close-tab">×</span>
-            </div>
+            {tabs.map(tab => (
+              <div
+                key={tab.id}
+                className={`tab ${activeTabId === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTabId(tab.id)}
+              >
+                {tab.type === 'welcome' && <img src="/vite.svg" width="14" style={{marginRight: 6}} />}
+                <span>{tab.title}</span>
+                <span className="close-tab" onClick={(e) => handleCloseTab(e, tab.id)}>×</span>
+              </div>
+            ))}
           </div>
           <div className="editor-content">
-             <WelcomePage />
+             {activeTab && activeTab.type === 'welcome' && (
+               <WelcomePage onNewFile={handleNewFile} />
+             )}
+             {activeTab && activeTab.type === 'editor' && (
+               <Editor
+                 content={files[activeTab.id] || ''}
+                 onChange={(val) => updateFileContent(activeTab.id, val)}
+               />
+             )}
+             {!activeTab && <div className="empty-editor">No Open Files</div>}
           </div>
 
           {/* Status Bar */}
@@ -76,7 +120,7 @@ function App() {
                 <span className="status-item">0 ⚠ 0</span>
              </div>
              <div className="status-right">
-                <span className="status-item">Ln 1, Col 1</span>
+                <span className="status-item">Ln {activeTab && activeTab.type === 'editor' ? (files[activeTab.id]?.split('\n').length || 1) : 1}, Col 1</span>
                 <span className="status-item">UTF-8</span>
                 <span className="status-item">JavaScript</span>
              </div>

@@ -2,8 +2,12 @@ import React from 'react';
 import './WelcomePage.css';
 import { VscNewFile, VscFolderOpened, VscRepoClone, VscRemote } from 'react-icons/vsc';
 
-const WelcomePage = () => {
+const WelcomePage = ({ onNewFile }) => {
   const handleAction = (action) => {
+    if (action === 'New File' && onNewFile) {
+      onNewFile();
+      return;
+    }
     console.log(`Action triggered: ${action}`);
     // Ideally this would use a toast notification
     alert(`Triggered: ${action}`);
