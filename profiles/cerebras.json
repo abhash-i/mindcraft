@@ -1,9 +1,0 @@
-{
-    "name": "cerebras",
-
-    "model": "cerebras/gpt-oss-120b",
-
-    "embedding": "openai",
-
-    "use_native_tools": true
-}

@@ -1,56 +1,23 @@
 {
-    "name": "mindcraft",
-    "type": "module",
-    "dependencies": {
-        "@anthropic-ai/sdk": "^0.17.1",
-        "@cerebras/cerebras_cloud_sdk": "^1.46.0",
-        "@google/genai": "^1.15.0",
-        "@huggingface/inference": "^4.11.3",
-        "@mistralai/mistralai": "^1.1.0",
-        "axios": "^1.12.2",
-        "canvas": "^3.1.0",
-        "cheerio": "^1.0.0",
-        "diff": "^5.1.0",
-        "express": "^4.18.2",
-        "glob": "^10.3.10",
-        "google-translate-api-x": "^10.7.1",
-        "groq-sdk": "^0.15.0",
-        "minecraft-data": "^3.97.0",
-        "mineflayer": "^4.33.0",
-        "mineflayer-armor-manager": "^2.0.1",
-        "mineflayer-auto-eat": "^3.3.6",
-        "mineflayer-collectblock": "^1.4.1",
-        "mineflayer-pathfinder": "^2.4.5",
-        "mineflayer-pvp": "^1.3.2",
-        "minimatch": "^9.0.3",
-        "node-canvas-webgl": "^0.3.0",
-        "open": "^10.2.0",
-        "openai": "^4.4.0",
-        "prismarine-item": "^1.15.0",
-        "prismarine-viewer": "^1.32.0",
-        "replicate": "^0.29.4",
-        "ses": "^1.9.1",
-        "socket.io": "^4.7.2",
-        "socket.io-client": "^4.7.2",
-        "three": "^0.128.0",
-        "tree-sitter": "^0.21.0",
-        "tree-sitter-bash": "^0.21.0",
-        "vec3": "^0.1.10",
-        "yargs": "^17.7.2"
-    },
-    "overrides": {
-        "canvas": "^3.1.0",
-        "gl": "^8.1.6"
-    },
-    "scripts": {
-        "postinstall": "patch-package",
-        "start": "node main.js"
-    },
-    "devDependencies": {
-        "@eslint/js": "^9.13.0",
-        "eslint": "^9.13.0",
-        "eslint-plugin-no-floating-promise": "^2.0.0",
-        "globals": "^15.11.0",
-        "patch-package": "^8.0.0"
-    }
+  "name": "vscode-clone-mobile",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "vite": "^4.4.5",
+    "vite-plugin-pwa": "^0.16.5"
+  }
 }
