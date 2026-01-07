@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WelcomePage from './WelcomePage';
 import Editor from './Editor';
+import Sidebar from './Sidebar';
 import './App.css';
 import { VscFiles, VscSearch, VscSourceControl, VscDebugAlt, VscExtensions, VscAccount, VscSettingsGear, VscMenu } from 'react-icons/vsc';
 
@@ -10,13 +11,25 @@ function App() {
   const [activeTabId, setActiveTabId] = useState('welcome');
   const [files, setFiles] = useState({}); // Simple file content store: { 'untitled-1': 'content...' }
 
+  useEffect(() => {
+    // Fetch initial files from backend
+    fetch('http://localhost:3000/api/files')
+      .then(res => res.json())
+      .then(data => {
+         const fileMap = {};
+         data.forEach(f => fileMap[f.id] = f);
+         setFiles(fileMap);
+      })
+      .catch(err => console.error("Failed to fetch files", err));
+  }, []);
+
   const handleNewFile = async () => {
     const newFileId = `Untitled-${Object.keys(files).length + 1}`;
 
     // Optimistic UI update
     const newTab = { id: newFileId, title: newFileId, type: 'editor' };
     setTabs([...tabs, newTab]);
-    setFiles({ ...files, [newFileId]: '' });
+    setFiles({ ...files, [newFileId]: { id: newFileId, title: newFileId, content: '', type: 'editor' } });
     setActiveTabId(newFileId);
 
     // Sync with backend
@@ -28,6 +41,23 @@ function App() {
       });
     } catch (err) {
       console.error("Failed to create file on backend", err);
+    }
+  };
+
+  const handleOpenFile = (fileId) => {
+    // If tab already exists, activate it
+    const existingTab = tabs.find(t => t.id === fileId);
+    if (existingTab) {
+      setActiveTabId(fileId);
+      return;
+    }
+
+    // Otherwise create new tab
+    const file = files[fileId];
+    if (file) {
+       const newTab = { id: file.id, title: file.title, type: file.type };
+       setTabs([...tabs, newTab]);
+       setActiveTabId(file.id);
     }
   };
 
@@ -43,7 +73,7 @@ function App() {
   };
 
   const updateFileContent = async (fileId, content) => {
-    setFiles({ ...files, [fileId]: content });
+    setFiles({ ...files, [fileId]: { ...files[fileId], content } });
 
     // Debounced save could go here, for now direct save
     try {
@@ -104,10 +134,10 @@ function App() {
           </div>
         </div>
 
-        {/* Sidebar (Mock) */}
-        {/* <div className="sidebar">
-           Explorer
-        </div> */}
+        {/* Sidebar */}
+        {activeActivity === 'files' && (
+           <Sidebar files={files} onOpenFile={handleOpenFile} />
+        )}
 
         {/* Editor Area */}
         <div className="editor-area">
@@ -130,7 +160,7 @@ function App() {
              )}
              {activeTab && activeTab.type === 'editor' && (
                <Editor
-                 content={files[activeTab.id] || ''}
+                 content={files[activeTab.id]?.content || ''}
                  onChange={(val) => updateFileContent(activeTab.id, val)}
                />
              )}
@@ -144,7 +174,7 @@ function App() {
                 <span className="status-item">0 ⚠ 0</span>
              </div>
              <div className="status-right">
-                <span className="status-item">Ln {activeTab && activeTab.type === 'editor' ? (files[activeTab.id]?.split('\n').length || 1) : 1}, Col 1</span>
+                <span className="status-item">Ln {activeTab && activeTab.type === 'editor' ? (files[activeTab.id]?.content?.split('\n').length || 1) : 1}, Col 1</span>
                 <span className="status-item">UTF-8</span>
                 <span className="status-item">JavaScript</span>
              </div>

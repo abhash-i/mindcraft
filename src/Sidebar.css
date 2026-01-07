@@ -1,0 +1,106 @@
+.sidebar {
+  width: 250px;
+  background-color: #252526;
+  color: #cccccc;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #1e1e1e;
+  font-size: 11px;
+}
+
+.sidebar-title {
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 20px;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: #bbbbbb;
+}
+
+.sidebar-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0; /* Visible on hover usually, but for mobile we might want visible */
+}
+
+.sidebar-title:hover .sidebar-actions {
+  opacity: 1;
+}
+
+.sidebar-actions svg {
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 3px;
+}
+
+.sidebar-actions svg:hover {
+  background-color: #3c3c3c;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.section-header svg {
+  margin: 0 2px;
+}
+
+.file-tree {
+  display: flex;
+  flex-direction: column;
+}
+
+.tree-item {
+  display: flex;
+  align-items: center;
+  padding: 3px 0 3px 20px;
+  cursor: pointer;
+  color: #cccccc;
+}
+
+.tree-item:hover {
+  background-color: #2a2d2e;
+  color: #ffffff;
+}
+
+.tree-item.active {
+  background-color: #37373d;
+  color: #ffffff;
+}
+
+.file-icon {
+  margin-right: 6px;
+  display: flex;
+  align-items: center;
+  color: #519aba; /* JS blueish */
+}
+
+.file-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-tree {
+  padding-left: 20px;
+  font-style: italic;
+  color: #858585;
+}
