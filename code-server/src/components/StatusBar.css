@@ -1,0 +1,33 @@
+.status-bar {
+  height: 22px;
+  background-color: var(--vscode-statusbar-bg);
+  color: var(--vscode-statusbar-fg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+.left-items, .right-items {
+  display: flex;
+  align-items: center;
+}
+
+.status-item {
+  padding: 0 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-item:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.remote-icon {
+  background-color: var(--vscode-link);
+  height: 22px;
+  padding: 0 10px;
+}

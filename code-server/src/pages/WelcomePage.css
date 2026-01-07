@@ -1,0 +1,180 @@
+.welcome-page {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  color: var(--vscode-fg);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-header {
+  margin-bottom: 40px;
+}
+
+.welcome-header h1 {
+  font-size: 36px;
+  font-weight: 300;
+  margin: 0 0 10px 0;
+  color: var(--vscode-header-fg);
+}
+
+.subtitle {
+  font-size: 20px;
+  color: var(--vscode-description-fg);
+  margin: 0;
+}
+
+.welcome-content {
+  display: flex;
+  gap: 60px;
+  flex: 1;
+}
+
+.column {
+  flex: 1;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 12px;
+}
+
+li a {
+  display: flex;
+  align-items: center;
+  color: var(--vscode-link);
+  font-size: 13px;
+}
+
+.icon {
+  margin-right: 8px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.recent-section {
+  margin-top: 40px;
+}
+
+.no-recent {
+  font-size: 13px;
+  color: var(--vscode-description-fg);
+}
+
+/* Walkthroughs */
+.walkthrough-card {
+  background-color: #252526;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.walkthrough-card:hover {
+  background-color: #2a2d2e;
+}
+
+.walkthrough-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 2px;
+}
+
+.walkthrough-text h3 {
+  font-size: 13px;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.walkthrough-text p {
+  font-size: 12px;
+  margin: 0;
+  color: var(--vscode-description-fg);
+}
+
+.tag {
+  background-color: #0078d4;
+  color: white;
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: 6px;
+  font-weight: normal;
+}
+
+.more-link {
+  font-size: 13px;
+  margin-top: 10px;
+  display: block;
+}
+
+/* Footer Checkbox */
+.welcome-footer {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  height: 16px;
+  width: 16px;
+  background-color: #3c3c3c;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  background-color: #4c4c4c;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .welcome-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .welcome-page {
+    padding: 20px;
+  }
+}

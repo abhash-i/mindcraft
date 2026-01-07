@@ -1,0 +1,8 @@
+{
+  "appId": "com.example.codeserver",
+  "appName": "Code Server",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

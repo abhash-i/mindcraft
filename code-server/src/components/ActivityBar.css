@@ -1,0 +1,27 @@
+.activity-bar {
+  width: 48px;
+  background-color: var(--vscode-activity-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--vscode-border);
+}
+
+.activity-bar .icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #858585;
+}
+
+.activity-bar .icon:hover {
+  color: #ffffff;
+}
+
+.activity-bar .icon.active {
+  color: #ffffff;
+  border-left: 2px solid #ffffff; /* Active indicator */
+}
