@@ -5,28 +5,32 @@ import { GPT } from './gpt.js'
 export class AzureGPT extends GPT {
     static prefix = 'azure';
     constructor(model_name, url, params) {
-        super(model_name, url)
+        super(model_name, url, params);
 
-        this.model_name = model_name;
-        this.params = params || {};
+        // Extract and validate apiVersion from params
+        // We delete it from params so it's not passed to the API call as an extra parameter
+        // assuming params is a clone or we are allowed to modify it.
+        // If not, we should probably just use it and not delete, but original code deleted it.
+        if (this.params && this.params.apiVersion) {
+            this.apiVersion = this.params.apiVersion;
+            delete this.params.apiVersion;
+        } else {
+             throw new Error('apiVersion is required in params for azure!');
+        }
+    }
 
+    _createClient() {
         const config = {};
 
-        if (url)
-            config.endpoint = url;
+        if (this.url)
+            config.endpoint = this.url;
 
         config.apiKey = hasKey('AZURE_OPENAI_API_KEY') ? getKey('AZURE_OPENAI_API_KEY') : getKey('OPENAI_API_KEY');
 
-        config.deployment = model_name;
+        config.deployment = this.model_name;
 
-        if (this.params.apiVersion) {
-            config.apiVersion = this.params.apiVersion;
-            delete this.params.apiVersion; // remove from params for later use in requests
-        }
-        else {
-            throw new Error('apiVersion is required in params for azure!');
-        }
+        config.apiVersion = this.apiVersion;
 
-        this.openai = new AzureOpenAI(config)
+        return new AzureOpenAI(config)
     }
 }

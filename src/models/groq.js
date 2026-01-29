@@ -22,10 +22,10 @@ export class GroqCloudAPI {
         // I'm going to do a sneaky ReplicateAPI theft for a lot of this, aren't I?
         if (this.url)
             console.warn("Groq Cloud has no implementation for custom URLs. Ignoring provided URL.");
+    }
 
-        this.groq = new Groq({ apiKey: getKey('GROQCLOUD_API_KEY') });
-
-
+    _createClient() {
+        return new Groq({ apiKey: getKey('GROQCLOUD_API_KEY') });
     }
 
     async sendRequest(turns, systemMessage, stop_seq = null) {
@@ -48,7 +48,8 @@ export class GroqCloudAPI {
                 this.params.max_completion_tokens = 4000;
             }
 
-            let completion = await this.groq.chat.completions.create({
+            const groq = this._createClient();
+            let completion = await groq.chat.completions.create({
                 "messages": messages,
                 "model": this.model_name || "qwen/qwen3-32b",
                 "stream": false,

@@ -5,13 +5,17 @@ export class GLHF {
     static prefix = 'glhf';
     constructor(model_name, url) {
         this.model_name = model_name;
+        this.url = url || "https://glhf.chat/api/openai/v1";
+    }
+
+    _createClient() {
         const apiKey = getKey('GHLF_API_KEY');
         if (!apiKey) {
             throw new Error('API key not found. Please check keys.json and ensure GHLF_API_KEY is defined.');
         }
-        this.openai = new OpenAIApi({
+        return new OpenAIApi({
             apiKey,
-            baseURL: url || "https://glhf.chat/api/openai/v1"
+            baseURL: this.url
         });
     }
 
@@ -32,7 +36,8 @@ export class GLHF {
             attempt++;
             console.log(`Awaiting glhf.chat API response... (attempt: ${attempt})`);
             try {
-                let completion = await this.openai.chat.completions.create(pack);
+                const openai = this._createClient();
+                let completion = await openai.chat.completions.create(pack);
                 if (completion.choices[0].finish_reason === 'length') {
                     throw new Error('Context length exceeded');
                 }

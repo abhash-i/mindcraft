@@ -7,14 +7,7 @@ export class Claude {
     constructor(model_name, url, params) {
         this.model_name = model_name;
         this.params = params || {};
-
-        let config = {};
-        if (url)
-            config.baseURL = url;
-        
-        config.apiKey = getKey('ANTHROPIC_API_KEY');
-
-        this.anthropic = new Anthropic(config);
+        this.url = url;
     }
 
     async sendRequest(turns, systemMessage) {
@@ -30,7 +23,15 @@ export class Claude {
                     this.params.max_tokens = 4096;
                 }
             }
-            const resp = await this.anthropic.messages.create({
+
+            let config = {};
+            if (this.url)
+                config.baseURL = this.url;
+
+            config.apiKey = getKey('ANTHROPIC_API_KEY');
+            const anthropic = new Anthropic(config);
+
+            const resp = await anthropic.messages.create({
                 model: this.model_name || "claude-sonnet-4-20250514",
                 system: systemMessage,
                 messages: messages,

@@ -9,14 +9,15 @@ export class Novita {
     this.model_name = model_name;
     this.url = url || 'https://api.novita.ai/v3/openai';
     this.params = params;
+  }
 
-
+  _createClient() {
     let config = {
       baseURL: this.url
     };
     config.apiKey = getKey('NOVITA_API_KEY');
 
-    this.openai = new OpenAIApi(config);
+    return new OpenAIApi(config);
   }
 
 	async sendRequest(turns, systemMessage, stop_seq='***') {
@@ -35,7 +36,8 @@ export class Novita {
       let res = null;
       try {
           console.log('Awaiting novita api response...')
-          let completion = await this.openai.chat.completions.create(pack);
+          const openai = this._createClient();
+          let completion = await openai.chat.completions.create(pack);
           if (completion.choices[0].finish_reason == 'length')
               throw new Error('Context length exceeded'); 
           console.log('Received.')

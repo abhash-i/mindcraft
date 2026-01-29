@@ -6,9 +6,12 @@ export class OpenRouter {
     static prefix = 'openrouter';
     constructor(model_name, url) {
         this.model_name = model_name;
+        this.url = url || 'https://openrouter.ai/api/v1';
+    }
 
+    _createClient() {
         let config = {};
-        config.baseURL = url || 'https://openrouter.ai/api/v1';
+        config.baseURL = this.url;
 
         const apiKey = getKey('OPENROUTER_API_KEY');
         if (!apiKey) {
@@ -18,7 +21,7 @@ export class OpenRouter {
         // Pass the API key to OpenAI compatible Api
         config.apiKey = apiKey; 
 
-        this.openai = new OpenAIApi(config);
+        return new OpenAIApi(config);
     }
 
     async sendRequest(turns, systemMessage, stop_seq='*') {
@@ -35,7 +38,8 @@ export class OpenRouter {
         let res = null;
         try {
             console.log('Awaiting openrouter api response...');
-            let completion = await this.openai.chat.completions.create(pack);
+            const openai = this._createClient();
+            let completion = await openai.chat.completions.create(pack);
             if (!completion?.choices?.[0]) {
                 console.error('No completion or choices returned:', completion);
                 return 'No response received.';

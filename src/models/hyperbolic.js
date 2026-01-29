@@ -5,12 +5,6 @@ export class Hyperbolic {
     constructor(modelName, apiUrl) {
         this.modelName = modelName || "deepseek-ai/DeepSeek-V3";
         this.apiUrl = apiUrl || "https://api.hyperbolic.xyz/v1/chat/completions";
-
-        // Retrieve the Hyperbolic API key from keys.js
-        this.apiKey = getKey('HYPERBOLIC_API_KEY');
-        if (!this.apiKey) {
-            throw new Error('HYPERBOLIC_API_KEY not found. Check your keys.js file.');
-        }
     }
 
     /**
@@ -24,6 +18,12 @@ export class Hyperbolic {
     async sendRequest(turns, systemMessage, stopSeq = '***') {
         // Prepare the messages with a system prompt at the beginning
         const messages = [{ role: 'system', content: systemMessage }, ...turns];
+
+        // Retrieve the Hyperbolic API key from keys.js
+        const apiKey = getKey('HYPERBOLIC_API_KEY');
+        if (!apiKey) {
+            throw new Error('HYPERBOLIC_API_KEY not found. Check your keys.js file.');
+        }
 
         // Build the request payload
         const payload = {
@@ -51,7 +51,7 @@ export class Hyperbolic {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.apiKey}`
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify(payload)
                 });
