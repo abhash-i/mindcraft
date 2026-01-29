@@ -13,8 +13,10 @@ export class HuggingFace {
     if (this.url) {
       console.warn("Hugging Face doesn't support custom urls!");
     }
+  }
 
-    this.huggingface = new HfInference(getKey('HUGGINGFACE_API_KEY'));
+  _createClient() {
+      return new HfInference(getKey('HUGGINGFACE_API_KEY'));
   }
 
   async sendRequest(turns, systemMessage) {
@@ -36,8 +38,9 @@ export class HuggingFace {
       console.log(`Awaiting Hugging Face API response... (model: ${model_name}, attempt: ${attempt})`);
       let res = '';
       try {
+        const huggingface = this._createClient();
         // Consume the streaming response chunk by chunk
-        for await (const chunk of this.huggingface.chatCompletionStream({
+        for await (const chunk of huggingface.chatCompletionStream({
           model: model_name,
           messages: [{ role: "user", content: input }],
           ...(this.params || {})

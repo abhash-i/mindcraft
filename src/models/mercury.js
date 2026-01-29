@@ -7,15 +7,14 @@ export class Mercury {
     constructor(model_name, url, params) {
         this.model_name = model_name;
         this.params = params;
+        this.url = url || "https://api.inceptionlabs.ai/v1";
+    }
+
+    _createClient() {
         let config = {};
-        if (url)
-            config.baseURL = url;
-        else
-            config.baseURL = "https://api.inceptionlabs.ai/v1";
-
+        config.baseURL = this.url;
         config.apiKey = getKey('MERCURY_API_KEY');
-
-        this.openai = new OpenAIApi(config);
+        return new OpenAIApi(config);
     }
 
     async sendRequest(turns, systemMessage, stop_seq='***') {
@@ -39,7 +38,8 @@ export class Mercury {
         try {
             console.log('Awaiting mercury api response from model', this.model_name)
             // console.log('Messages:', messages);
-            let completion = await this.openai.chat.completions.create(pack);
+            const openai = this._createClient();
+            let completion = await openai.chat.completions.create(pack);
             if (completion.choices[0].finish_reason == 'length')
                 throw new Error('Context length exceeded'); 
             console.log('Received.')
@@ -81,7 +81,8 @@ export class Mercury {
     async embed(text) {
         if (text.length > 8191)
             text = text.slice(0, 8191);
-        const embedding = await this.openai.embeddings.create({
+        const openai = this._createClient();
+        const embedding = await openai.embeddings.create({
             model: this.model_name || "text-embedding-3-small",
             input: text,
             encoding_format: "float",
@@ -90,6 +91,3 @@ export class Mercury {
     }
 
 }
-
-
-

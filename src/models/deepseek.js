@@ -7,13 +7,14 @@ export class DeepSeek {
     constructor(model_name, url, params) {
         this.model_name = model_name;
         this.params = params;
+        this.url = url || 'https://api.deepseek.com';
+    }
 
+    _createClient() {
         let config = {};
-
-        config.baseURL = url || 'https://api.deepseek.com';
+        config.baseURL = this.url;
         config.apiKey = getKey('DEEPSEEK_API_KEY');
-
-        this.openai = new OpenAIApi(config);
+        return new OpenAIApi(config);
     }
 
     async sendRequest(turns, systemMessage, stop_seq='***') {
@@ -32,7 +33,8 @@ export class DeepSeek {
         try {
             console.log('Awaiting deepseek api response...')
             // console.log('Messages:', messages);
-            let completion = await this.openai.chat.completions.create(pack);
+            const openai = this._createClient();
+            let completion = await openai.chat.completions.create(pack);
             if (completion.choices[0].finish_reason == 'length')
                 throw new Error('Context length exceeded'); 
             console.log('Received.')
@@ -54,6 +56,3 @@ export class DeepSeek {
         throw new Error('Embeddings are not supported by Deepseek.');
     }
 }
-
-
-

@@ -7,12 +7,14 @@ export class Qwen {
     constructor(model_name, url, params) {
         this.model_name = model_name;
         this.params = params;
+        this.url = url || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    }
+
+    _createClient() {
         let config = {};
-
-        config.baseURL = url || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+        config.baseURL = this.url;
         config.apiKey = getKey('QWEN_API_KEY');
-
-        this.openai = new OpenAIApi(config);
+        return new OpenAIApi(config);
     }
 
     async sendRequest(turns, systemMessage, stop_seq='***') {
@@ -31,7 +33,8 @@ export class Qwen {
         try {
             console.log('Awaiting Qwen api response...');
             // console.log('Messages:', messages);
-            let completion = await this.openai.chat.completions.create(pack);
+            const openai = this._createClient();
+            let completion = await openai.chat.completions.create(pack);
             if (completion.choices[0].finish_reason == 'length')
                 throw new Error('Context length exceeded');
             console.log('Received.');
@@ -56,7 +59,8 @@ export class Qwen {
         const maxRetries = 5; // Maximum number of retries
         for (let retries = 0; retries < maxRetries; retries++) {
             try {
-                const { data } = await this.openai.embeddings.create({
+                const openai = this._createClient();
+                const { data } = await openai.embeddings.create({
                     model: this.model_name || "text-embedding-v3",
                     input: text,
                     encoding_format: "float",

@@ -30,8 +30,10 @@ export class Gemini {
                 "threshold": "BLOCK_NONE",
             },
         ];
+    }
 
-        this.genAI = new GoogleGenAI({apiKey: getKey('GEMINI_API_KEY')});
+    _createClient() {
+        return new GoogleGenAI({apiKey: getKey('GEMINI_API_KEY')});
     }
 
     async sendRequest(turns, systemMessage) {
@@ -46,7 +48,8 @@ export class Gemini {
             });
         }
 
-        const result = await this.genAI.models.generateContent({
+        const genAI = this._createClient();
+        const result = await genAI.models.generateContent({
             model: this.model_name || "gemini-2.5-flash",
             contents: contents,
             safetySettings: this.safetySettings,
@@ -86,7 +89,8 @@ export class Gemini {
         let res = null;
         try {
             console.log('Awaiting Google API vision response...');
-            const result = await this.genAI.models.generateContent({
+            const genAI = this._createClient();
+            const result = await genAI.models.generateContent({
                 contents: contents,
                 safetySettings: this.safetySettings,
                 systemInstruction: systemMessage,
@@ -110,7 +114,8 @@ export class Gemini {
     }
 
     async embed(text) {
-        const result = await this.genAI.models.embedContent({
+        const genAI = this._createClient();
+        const result = await genAI.models.embedContent({
             model: this.model_name || "gemini-embedding-001",
             contents: text,
         })

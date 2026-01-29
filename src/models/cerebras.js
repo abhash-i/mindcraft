@@ -8,9 +8,10 @@ export class Cerebras {
         this.model_name = model_name;
         this.url = url;
         this.params = params;
+    }
 
-        // Initialize client with API key
-        this.client = new CerebrasSDK({ apiKey: getKey('CEREBRAS_API_KEY') });
+    _createClient() {
+        return new CerebrasSDK({ apiKey: getKey('CEREBRAS_API_KEY') });
     }
 
     async sendRequest(turns, systemMessage, stop_seq = '***') {
@@ -27,7 +28,8 @@ export class Cerebras {
 
         let res;
         try {
-            const completion = await this.client.chat.completions.create(pack);
+            const client = this._createClient();
+            const completion = await client.chat.completions.create(pack);
             // OpenAI-compatible shape
             res = completion.choices?.[0]?.message?.content || '';
         } catch (err) {

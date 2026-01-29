@@ -4,7 +4,6 @@ import { strictFormat } from '../utils/text.js';
 
 export class Mistral {
     static prefix = 'mistral';
-    #client;
 
     constructor(model_name, url, params) {
         this.model_name = model_name;
@@ -12,20 +11,8 @@ export class Mistral {
 
         if (typeof url === "string") {
             console.warn("Mistral does not support custom URL's, ignoring!");
-
         }
 
-        if (!getKey("MISTRAL_API_KEY")) {
-            throw new Error("Mistral API Key missing, make sure to set MISTRAL_API_KEY in settings.json")
-        }
-
-        this.#client = new MistralClient(
-            {
-                apiKey: getKey("MISTRAL_API_KEY")
-            }
-        );
-
-        
         // Prevents the following code from running when model not specified
         if (typeof this.model_name === "undefined") return;
 
@@ -34,6 +21,18 @@ export class Mistral {
         if (typeof model_name.split("/")[1] !== "undefined") {
             this.model_name = model_name.split("/")[1];
         }
+    }
+
+    _createClient() {
+        if (!getKey("MISTRAL_API_KEY")) {
+            throw new Error("Mistral API Key missing, make sure to set MISTRAL_API_KEY in settings.json")
+        }
+
+        return new MistralClient(
+            {
+                apiKey: getKey("MISTRAL_API_KEY")
+            }
+        );
     }
 
     async sendRequest(turns, systemMessage) {
@@ -49,7 +48,8 @@ export class Mistral {
             messages.push(...strictFormat(turns));
 
             console.log('Awaiting mistral api response...')
-            const response  = await this.#client.chat.complete({
+            const client = this._createClient();
+            const response  = await client.chat.complete({
                 model,
                 messages,
                 ...(this.params || {})
@@ -85,7 +85,8 @@ export class Mistral {
     }
 
     async embed(text) {
-        const embedding = await this.#client.embeddings.create({
+        const client = this._createClient();
+        const embedding = await client.embeddings.create({
             model: "mistral-embed",
             inputs: text
         });

@@ -7,17 +7,20 @@ export class GPT {
     constructor(model_name, url, params) {
         this.model_name = model_name;
         this.params = params;
+        this.url = url;
+    }
 
+    _createClient() {
         let config = {};
-        if (url)
-            config.baseURL = url;
+        if (this.url)
+            config.baseURL = this.url;
 
         if (hasKey('OPENAI_ORG_ID'))
             config.organization = getKey('OPENAI_ORG_ID');
 
         config.apiKey = getKey('OPENAI_API_KEY');
 
-        this.openai = new OpenAIApi(config);
+        return new OpenAIApi(config);
     }
 
     async sendRequest(turns, systemMessage, stop_seq='***') {
@@ -32,7 +35,8 @@ export class GPT {
 
         try {
             console.log('Awaiting openai api response from model', model)
-            const response = await this.openai.responses.create({
+            const openai = this._createClient();
+            const response = await openai.responses.create({
                 model: model,
                 instructions: systemMessage,
                 input: messages,
@@ -77,7 +81,8 @@ export class GPT {
     async embed(text) {
         if (text.length > 8191)
             text = text.slice(0, 8191);
-        const embedding = await this.openai.embeddings.create({
+        const openai = this._createClient();
+        const embedding = await openai.embeddings.create({
             model: this.model_name || "text-embedding-3-small",
             input: text,
             encoding_format: "float",

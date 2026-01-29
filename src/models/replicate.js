@@ -13,11 +13,13 @@ export class ReplicateAPI {
 		if (this.url) {
 			console.warn('Replicate API does not support custom URLs. Ignoring provided URL.');
 		}
+	}
 
-		this.replicate = new Replicate({
+    _createClient() {
+        return new Replicate({
 			auth: getKey('REPLICATE_API_KEY'),
 		});
-	}
+    }
 
 	async sendRequest(turns, systemMessage) {
 		const stop_seq = '***';
@@ -33,7 +35,8 @@ export class ReplicateAPI {
 		try {
 			console.log('Awaiting Replicate API response...');
 			let result = '';
-			for await (const event of this.replicate.stream(model_name, { input })) {
+            const replicate = this._createClient();
+			for await (const event of replicate.stream(model_name, { input })) {
 				result += event;
 				if (result === '') break;
 				if (result.includes(stop_seq)) {
@@ -51,7 +54,8 @@ export class ReplicateAPI {
 	}
 
 	async embed(text) {
-		const output = await this.replicate.run(
+        const replicate = this._createClient();
+		const output = await replicate.run(
 			this.model_name || "mark3labs/embeddings-gte-base:d619cff29338b9a37c3d06605042e1ff0594a8c3eff0175fd6967f5643fc4d47",
 			{ input: {text} }
 		);
